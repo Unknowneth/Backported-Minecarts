@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "com.notunanancyowen.minecart.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AbstractMinecartEntityMixin",
+    "EntityTrackerEntryMixin",
+    "NetworkStateBuilderMixin",
+    "PlayPacketsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "AbstractMinecartEntityRendererMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "EntityRendererMixin"
+  ]
+}
