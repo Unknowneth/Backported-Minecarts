@@ -91,7 +91,7 @@ public abstract class AbstractMinecartEntityMixin extends VehicleEntity implemen
         return controller;
     }
 
-    @Inject(method = "tick", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void overrideTick(CallbackInfo ci) {
         if (this.getDamageWobbleTicks() > 0) {
             this.setDamageWobbleTicks(this.getDamageWobbleTicks() - 1);
