@@ -2,6 +2,7 @@ package com.notunanancyowen.minecart.mixin;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.notunanancyowen.minecart.dataholders.ImprovedMinecart;
 import com.notunanancyowen.minecart.MinecartController;
 import net.minecraft.block.AbstractRailBlock;
@@ -10,8 +11,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.PoweredRailBlock;
 import net.minecraft.block.enums.RailShape;
 import net.minecraft.entity.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
@@ -64,15 +67,16 @@ public abstract class AbstractMinecartEntityMixin extends VehicleEntity implemen
         controller.minecart = (AbstractMinecartEntity & ImprovedMinecart)(Object)this;
         yawFlipped = false;
     }
-    @Inject(method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/World;DDD)V", at = @At("TAIL"))
-    private void initPositionCorrectly(EntityType type, World world, double x, double y, double z, CallbackInfo ci) {
-        BlockPos blockPos = getRailOrMinecartPos();
+    @Inject(method = "create", at = @At("TAIL"))
+    private static void initPositionCorrectly(ServerWorld world, double x, double y, double z, AbstractMinecartEntity.Type type, ItemStack stack, PlayerEntity player, CallbackInfoReturnable<AbstractMinecartEntity> cir, @Local AbstractMinecartEntity minecart) {
+        ImprovedMinecart im = (ImprovedMinecart) minecart;
+        BlockPos blockPos = im.getRailOrMinecartPos();
         BlockState blockState = world.getBlockState(blockPos);
-        lastRenderX = x;
-        lastRenderY = y;
-        lastRenderZ = z;
-        if(controller.minecart == null) controller.minecart = (AbstractMinecartEntity & ImprovedMinecart)(Object)this;
-        controller.adjustToRail(blockPos, blockState, true);
+        minecart.lastRenderX = x;
+        minecart.lastRenderY = y;
+        minecart.lastRenderZ = z;
+        if(im.getController().minecart == null) im.getController().minecart = minecart;
+        im.getController().adjustToRail(blockPos, blockState, true);
     }
     @Override public Vec3d applySlowdown(Vec3d velocity) {
         if(this.controller.minecart == null) this.controller.minecart = (AbstractMinecartEntity & ImprovedMinecart)(Object)this;
@@ -91,7 +95,7 @@ public abstract class AbstractMinecartEntityMixin extends VehicleEntity implemen
         return controller;
     }
 
-    @Inject(method = "tick", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void overrideTick(CallbackInfo ci) {
         if (this.getDamageWobbleTicks() > 0) {
             this.setDamageWobbleTicks(this.getDamageWobbleTicks() - 1);

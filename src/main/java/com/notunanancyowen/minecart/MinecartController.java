@@ -134,7 +134,9 @@ public class MinecartController<T extends AbstractMinecartEntity & ImprovedMinec
     public Vec3d limitSpeed(Vec3d velocity) {
         return velocity;
     }
-
+    protected double getAccelerationBoost(){
+        return 0.06;
+    }
     public void tick() {
         if (getWorld().isClient()) {
             this.tickClient();
@@ -467,7 +469,7 @@ public class MinecartController<T extends AbstractMinecartEntity & ImprovedMinec
     private Vec3d accelerateFromPoweredRail(Vec3d velocity, BlockPos railPos, BlockState railState) {
         if (railState.isOf(Blocks.POWERED_RAIL) && railState.get(PoweredRailBlock.POWERED)) {
             if (velocity.length() > 0.01) {
-                return velocity.normalize().multiply(velocity.length() + 0.06);
+                return velocity.normalize().multiply(velocity.length() + getAccelerationBoost());
             } else {
                 Vec3d vec3d = this.minecart.getLaunchDirection(railPos);
                 return vec3d.lengthSquared() <= 0.0 ? velocity : vec3d.multiply(velocity.length() + 0.2);
