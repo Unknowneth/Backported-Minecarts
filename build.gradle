@@ -68,11 +68,24 @@ publishing {
 		}
 	}
 
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
 	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
+		var mavenUrl = property("mavenUrl")
+		var mavenUser = property("mavenUsername")
+		var mavenPassword = property("mavenPassword")
+
+		// Only declared when CI supplies credentials, so `publishToMavenLocal` and every other
+		// task still work on a developer machine with no secrets configured.
+		if (mavenUrl != null && mavenUser != null && mavenPassword != null) {
+			maven {
+				name = "RiftRealms"
+				url = uri(mavenUrl)
+				credentials {
+					username = mavenUser
+					password = mavenPassword
+				}
+			}
+		}
+
 	}
+
 }
