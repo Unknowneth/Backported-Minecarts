@@ -29,10 +29,6 @@ public abstract class ClientPlayNetworkHandlerMixin extends ClientCommonNetworkH
             if (!entity.isLogicalSideForUpdatingMovement()
                     && abstractMinecartEntity.getController() instanceof MinecartController experimentalMinecartController) {
                 experimentalMinecartController.stagingLerpSteps.addAll(packet.lerpSteps());
-
-                entity.setPosition(packet.lerpSteps().getLast().position());
-                entity.setPitch(packet.lerpSteps().getLast().xRot());
-                entity.setYaw(packet.lerpSteps().getLast().yRot());
             }
         }
     }
