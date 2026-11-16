@@ -1,0 +1,32 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+issueTrackerURL = "https://github.com/Unknowneth/Backported-Minecarts/issues"
+license = "MIT"
+
+[[mods]]
+modId = "minecart_backport"
+version = "${version}"
+displayName = "Backported Minecarts"
+authors = "N0t_UN_Owen/NotUnaNancyOwen"
+description = '''
+Backports 1.21.2 minecart mechanics to older versions
+Special thanks to Farpo from GitHub for fixing jitter at high speeds
+'''
+logoFile = "assets/minecart_backport/icon.png"
+
+[[dependencies.minecart_backport]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.minecart_backport]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[mixins]]
+config = "minecart_backport.mixins.json"
